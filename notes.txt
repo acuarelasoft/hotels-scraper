@@ -1,0 +1,3 @@
+puppeteer-extra only works with "puppeteer": "^6.0.0" at 22/04/2021
+--------------
+puppeteer-extra-plugin-stealth needs esModuleInterop in tsconfig at 22/04/2021

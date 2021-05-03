@@ -1,0 +1,21 @@
+@host = localhost:3000
+@inDate = 2021-05-11
+@outDate = 2021-05-16
+@rooms = 1
+@adults = 2
+@destination = tulum
+
+#min results : paris texas
+#medium results: tulum
+#max results: madrid
+
+GET http://{{host}}/booking-com?inDate={{inDate}}&outDate={{outDate}}&rooms={{rooms}}&adults={{adults}}&destination={{destination}}
+###
+
+GET http://{{host}}/booking-com/clean-cache
+###
+
+GET http://scraper.travelnet.com.mx/booking-com?inDate={{inDate}}&outDate={{outDate}}&rooms={{rooms}}&adults={{adults}}&destination={{destination}}
+###
+
+GET http://scraper.travelnet.com.mx/booking-com/clean-cache
