@@ -1,6 +1,6 @@
 @host = localhost:3000
-@inDate = 2021-05-11
-@outDate = 2021-05-16
+@inDate = 2021-05-18
+@outDate = 2021-05-21
 @rooms = 1
 @adults = 2
 @destination = tulum

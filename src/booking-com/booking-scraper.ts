@@ -92,7 +92,7 @@ export class BookingScraper {
     const $ = cheerio.load(content);
     const $hotels = $('.sr_item_content');
     const priceRegex = /\d+,?\d*/;
-    const nameRegex = /\n/gi;
+    const nRegex = /\n/gi;
     const hotels = [];
 
     if ($hotels.length <= 0) {
@@ -102,9 +102,13 @@ export class BookingScraper {
 
     $hotels.each((index, element) => {
       const $e = $(element);
-      const name = $e.find('.sr-hotel__name').text().replace(nameRegex, '');
-      const matchPrice = $e.find('.bui-price-display__value').text().match(priceRegex);
-      const matchTax = $e.find('.prd-taxes-and-fees-under-price').text().match(priceRegex);
+      const name = $e.find('.sr-hotel__name').text().replace(nRegex, '');
+      const score = $e.find('.bui-review-score__badge').text().trim();
+      const review = $e.find('.bui-review-score__title').text().replace(nRegex, '').trim();
+      const originalPrice = $e.find('.bui-price-display__value').text().replace(nRegex, '').trim();
+      const originalTax = $e.find('.prd-taxes-and-fees-under-price').text().replace(nRegex, '').trim();
+      const matchPrice = originalPrice.match(priceRegex);
+      const matchTax = originalTax.match(priceRegex);
       let price = '0';
       let tax = '0';
 
@@ -118,8 +122,12 @@ export class BookingScraper {
 
       hotels.push({
         name,
+        score,
+        review,
         price,
+        originalPrice,
         tax,
+        originalTax,
         pageNumber: pageNumber.toString()
       });
     });
