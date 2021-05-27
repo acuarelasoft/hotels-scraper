@@ -1,8 +1,8 @@
 import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { BrowserService } from 'src/shared/browser-service';
-import { Hotel } from 'src/shared/hotel.interface';
+import { Hotel } from 'src/booking-com/booking-hotel.interface';
 import { Page } from 'puppeteer';
-import { SearchDto } from './search-dto';
+import { BookingSearchDTO } from './booking-search.dto';
 import * as cheerio from 'cheerio';
 import { map } from 'rxjs/operators';
 
@@ -12,7 +12,7 @@ export class BookingScraper {
 
   constructor(private browserService: BrowserService, private httpService: HttpService) {}
 
-  async sendSearchForm(page: Page, searchDto: SearchDto): Promise<void> {
+  async sendSearchForm(page: Page, searchDto: BookingSearchDTO): Promise<void> {
     page.goto('https://www.booking.com/searchresults.html?selected_currency=USD', {
       waitUntil: 'domcontentloaded',
     });
@@ -93,7 +93,7 @@ export class BookingScraper {
     const $hotels = $('.sr_item_content');
     const priceRegex = /\d+,?\d*/;
     const nRegex = /\n/gi;
-    const hotels = [];
+    const hotels: Hotel[] = [];
 
     if ($hotels.length <= 0) {
       this.logger.warn('markup without hotels info');
@@ -105,20 +105,14 @@ export class BookingScraper {
       const name = $e.find('.sr-hotel__name').text().replace(nRegex, '');
       const score = $e.find('.bui-review-score__badge').text().trim();
       const review = $e.find('.bui-review-score__title').text().replace(nRegex, '').trim();
+
       const originalPrice = $e.find('.bui-price-display__value').text().replace(nRegex, '').trim();
-      const originalTax = $e.find('.prd-taxes-and-fees-under-price').text().replace(nRegex, '').trim();
       const matchPrice = originalPrice.match(priceRegex);
+      const price = matchPrice ? matchPrice[0].replace(',', '') : '0';
+
+      const originalTax = $e.find('.prd-taxes-and-fees-under-price').text().replace(nRegex, '').trim();
       const matchTax = originalTax.match(priceRegex);
-      let price = '0';
-      let tax = '0';
-
-      if (matchPrice) {
-        price = matchPrice[0].replace(',', '');
-      }
-
-      if (matchTax) {
-        tax = matchTax[0].replace(',', '');
-      }
+      const tax = matchTax ? matchTax[0].replace(',', '') : '0';
 
       hotels.push({
         name,
@@ -150,7 +144,7 @@ export class BookingScraper {
     ).toPromise();
   }
 
-  async trySendSearchForm(page: Page, searchDto: SearchDto) {
+  async trySendSearchForm(page: Page, searchDto: BookingSearchDTO) {
     let attempts = 0;
     let err;
 
@@ -184,7 +178,7 @@ export class BookingScraper {
     throw err;
   }
 
-  async search(searchDto: SearchDto) {
+  async search(searchDto: BookingSearchDTO) {
     let hotels: Hotel[] = [];
     let urls: string[] = [];
     let page: Page;
@@ -195,7 +189,6 @@ export class BookingScraper {
     } catch (error) {
       this.logger.error(`Fatal: ${error}`);
       await page.close();
-      await this.browserService.disponse();
 
       return {
         error: `Error sending search form: ${error}`

@@ -1,7 +1,7 @@
 import { CacheInterceptor, CACHE_MANAGER, Controller, Get, HttpCode, Inject, Query, UseInterceptors } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { BookingScraper } from './booking-scraper';
-import { SearchDto } from './search-dto';
+import { BookingSearchDTO } from './booking-search.dto';
 import process from 'process';
 
 @Controller('booking-com')
@@ -11,7 +11,7 @@ export class BookingComController {
 
   @Get()
   @UseInterceptors(CacheInterceptor)
-  search(@Query() searchDTO: SearchDto) {
+  search(@Query() searchDTO: BookingSearchDTO) {
     try {
       return this.scraper.search(searchDTO);
     } catch (error) {

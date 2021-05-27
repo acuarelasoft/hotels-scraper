@@ -1,27 +1,44 @@
-import { Injectable } from '@nestjs/common';
-import { Browser, Page } from 'puppeteer';
+import { Injectable, Logger } from '@nestjs/common';
+import { Page, Browser } from 'puppeteer';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
 @Injectable()
 export class BrowserService {
-  private _browser: Browser;
+  private readonly logger = new Logger('BrowserService');
+  private browser: Browser;
+  private headless: boolean;
 
-  private async ensureBrowserInitialized() {
-    if (this._browser == null) {
-      this._browser = await puppeteer.use(StealthPlugin()).launch({
-        headless: true,
+  constructor() {
+    this.headless = process.env.HEADLESS === 'true' ? true : false ;
+  }
+
+  private async ensurebrowserInitializedAsync() {
+    if (this.browser == null) {
+      this.browser = await puppeteer.use(StealthPlugin()).launch({
+        headless: this.headless,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
+
+      this.browser.on('disconnected', () => {
+        this.logger.error(`Browser disconnected`);
+        this.browser = null;
       });
     }
   }
 
-  async getPage(): Promise<Page> {
-    await this.ensureBrowserInitialized();
+  async getBrowserAsync(): Promise<Browser> {
+    await this.ensurebrowserInitializedAsync();
+    return this.browser;
+  }
 
-    const page = await this._browser.newPage();
-    await page.setCacheEnabled(false);
+  async getPage(): Promise<Page> {
+    await this.ensurebrowserInitializedAsync();
+
+    const page = await this.browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
+    await page.setCacheEnabled(false);
+
     await page.setRequestInterception(true);
 
     page.on('request', (req) => {
@@ -37,12 +54,5 @@ export class BrowserService {
     });
 
     return page;
-  }
-
-  async disponse(): Promise<void> {
-    if (this._browser) {
-      await this._browser.close();
-      this._browser = null;
-    }
   }
 }

@@ -1,6 +1,6 @@
-import { IsDateString, IsNumberString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsDateString, IsNumberString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class SearchDto {
+export class BookingSearchDTO {
   @IsDateString()
   inDate: string;
 
@@ -16,5 +16,6 @@ export class SearchDto {
   rooms = '1';
 
   @IsNotEmpty()
+  @IsString()
   destination: string;
 }

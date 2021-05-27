@@ -1,6 +1,6 @@
 @host = localhost:3000
-@inDate = 2021-05-18
-@outDate = 2021-05-21
+@inDate = 2021-06-13
+@outDate = 2021-06-15
 @rooms = 1
 @adults = 2
 @destination = tulum
@@ -15,7 +15,7 @@ GET http://{{host}}/booking-com?inDate={{inDate}}&outDate={{outDate}}&rooms={{ro
 GET http://{{host}}/booking-com/clean-cache
 ###
 
-GET http://scraper.travelnet.com.mx/booking-com?inDate={{inDate}}&outDate={{outDate}}&rooms={{rooms}}&adults={{adults}}&destination={{destination}}
+GET https://scraper.travelnet.com.mx/booking-com?inDate={{inDate}}&outDate={{outDate}}&rooms={{rooms}}&adults={{adults}}&destination={{destination}}
 ###
 
-GET http://scraper.travelnet.com.mx/booking-com/clean-cache
+GET https://scraper.travelnet.com.mx/booking-com/clean-cache

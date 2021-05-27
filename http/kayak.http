@@ -1,0 +1,10 @@
+@host = localhost:3000
+@inDate = 2021-07-01
+@outDate = 2021-07-04
+@rooms = 1
+@adults = 2
+@loads = 5
+@destination = tulum
+@deepprices = false
+
+GET http://{{host}}/kayak-com?inDate={{inDate}}&outDate={{outDate}}&rooms={{rooms}}&adults={{adults}}&destination={{destination}}&loads={{loads}}&deepprices={{deepprices}}
