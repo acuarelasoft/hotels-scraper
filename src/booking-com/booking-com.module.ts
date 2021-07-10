@@ -1,7 +1,8 @@
-import { CacheModule, HttpModule, Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { SharedModule } from 'src/shared/shared.module';
 import { BookingScraper } from './booking-scraper';
 import { BookingComController } from './booking-com.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [

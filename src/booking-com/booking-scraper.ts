@@ -1,10 +1,11 @@
-import { HttpService, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BrowserService } from 'src/shared/browser-service';
 import { Hotel } from 'src/booking-com/booking-hotel.interface';
 import { Page } from 'puppeteer';
 import { BookingSearchDTO } from './booking-search.dto';
 import * as cheerio from 'cheerio';
 import { map } from 'rxjs/operators';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class BookingScraper {

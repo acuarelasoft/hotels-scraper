@@ -1,4 +1,4 @@
-import { IsNumberString, IsNotEmpty, IsOptional, IsString, isDateString, IsDateString, IsBooleanString } from 'class-validator';
+import { IsNumberString, IsNotEmpty, IsOptional, IsString, IsDateString, IsBooleanString } from 'class-validator';
 
 export class KayakSearchDTO {
   @IsDateString()

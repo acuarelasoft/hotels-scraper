@@ -11,6 +11,7 @@ export class BrowserService {
 
   constructor() {
     this.headless = process.env.HEADLESS === 'true' ? true : false ;
+    // this.headless = false;
   }
 
   private async ensurebrowserInitializedAsync() {
